@@ -8,8 +8,16 @@ Run from the project root (the folder that contains `model/`, `train_clean.csv`,
     streamlit run app.py
 """
 
+import sys
 import warnings
 warnings.filterwarnings("ignore")
+
+# Alias Cython extension modules to prevent pickle deserialization issues across platforms
+try:
+    import sklearn._loss._loss as _sklearn_cy_loss
+    sys.modules['_loss'] = _sklearn_cy_loss
+except Exception:
+    pass
 
 from pathlib import Path
 
@@ -19,6 +27,8 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
+from sklearn.compose import ColumnTransformer
+from sklearn.ensemble import GradientBoostingClassifier, HistGradientBoostingClassifier
 from sklearn.metrics import (
     classification_report,
     confusion_matrix,
@@ -28,6 +38,8 @@ from sklearn.metrics import (
     roc_auc_score,
 )
 from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
 # --------------------------------------------------------------------------
 # Config
@@ -81,12 +93,113 @@ RESULTS_TABLE = pd.DataFrame(
 ).set_index("model")
 
 
+def train_fallback_model(name: str):
+    """Dynamically train the model on the fly if the pre-saved .joblib artifact
+    fails to unpickle due to platform/architecture or pickle environment differences."""
+    train = load_train()
+    X, y = train[FEATURES], train[TARGET]
+    X_train, _, y_train, _ = train_test_split(
+        X, y, test_size=0.2, stratify=y, random_state=42
+    )
+    unscaled_prep = ColumnTransformer([
+        ("num", "passthrough", NUM_FEATURES),
+        ("cat", OneHotEncoder(handle_unknown="ignore"), CAT_FEATURES)
+    ])
+    scaled_prep = ColumnTransformer([
+        ("num", StandardScaler(), NUM_FEATURES),
+        ("cat", OneHotEncoder(handle_unknown="ignore"), CAT_FEATURES)
+    ])
+
+    if name == "Gradient Boosting":
+        model = Pipeline([
+            ("prep", unscaled_prep),
+            ("clf", GradientBoostingClassifier(
+                learning_rate=0.03, loss="log_loss", max_depth=4,
+                min_samples_leaf=10, min_samples_split=2, n_estimators=250,
+                random_state=42, subsample=0.7
+            ))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    elif name == "Hist Gradient Boosting":
+        model = HistGradientBoostingClassifier(
+            categorical_features=CAT_FEATURES, class_weight="balanced",
+            learning_rate=0.05, loss="log_loss", max_depth=4,
+            max_iter=150, min_samples_leaf=20, random_state=42
+        )
+        model.fit(X_train, y_train)
+        return model
+    elif name == "LightGBM":
+        from lightgbm import LGBMClassifier
+        model = Pipeline([
+            ("prep", unscaled_prep),
+            ("clf", LGBMClassifier(
+                max_depth=4, num_leaves=15, min_child_samples=20,
+                learning_rate=0.05, n_estimators=200, subsample=0.8,
+                colsample_bytree=0.8, reg_alpha=1.0, reg_lambda=1.0,
+                class_weight="balanced", random_state=42, verbose=-1
+            ))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    elif name == "CatBoost":
+        from catboost import CatBoostClassifier, Pool
+        cb_train_pool = Pool(X_train, y_train, cat_features=CAT_FEATURES)
+        model = CatBoostClassifier(
+            depth=4, iterations=300, learning_rate=0.05, l2_leaf_reg=6,
+            auto_class_weights="Balanced", verbose=False, random_state=42
+        )
+        model.fit(cb_train_pool)
+        return model
+    elif name == "Logistic Regression":
+        from sklearn.linear_model import LogisticRegression
+        model = Pipeline([
+            ("prep", scaled_prep),
+            ("clf", LogisticRegression(C=0.1, class_weight="balanced", max_iter=1000, random_state=42))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    elif name == "SVM (RBF)":
+        from sklearn.svm import SVC
+        model = Pipeline([
+            ("prep", scaled_prep),
+            ("clf", SVC(C=1.0, class_weight="balanced", gamma="scale", probability=True, random_state=42))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    elif name == "SVM (Linear)":
+        from sklearn.svm import SVC
+        model = Pipeline([
+            ("prep", scaled_prep),
+            ("clf", SVC(C=0.1, class_weight="balanced", kernel="linear", probability=True, random_state=42))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    elif name == "XGBoost":
+        from xgboost import XGBClassifier
+        scale_pos_weight = (y_train == 0).sum() / (y_train == 1).sum()
+        model = Pipeline([
+            ("prep", unscaled_prep),
+            ("clf", XGBClassifier(
+                max_depth=3, learning_rate=0.05, n_estimators=200,
+                subsample=0.8, colsample_bytree=0.8, reg_alpha=1.0, reg_lambda=2.0,
+                scale_pos_weight=scale_pos_weight, eval_metric="logloss", random_state=42
+            ))
+        ])
+        model.fit(X_train, y_train)
+        return model
+    raise ValueError(f"Unknown model name: {name}")
+
+
 # --------------------------------------------------------------------------
 # Cached loaders
 # --------------------------------------------------------------------------
 @st.cache_resource
 def load_model(name: str):
-    return joblib.load(MODEL_DIR / MODEL_FILES[name])
+    try:
+        return joblib.load(MODEL_DIR / MODEL_FILES[name])
+    except Exception:
+        return train_fallback_model(name)
 
 
 @st.cache_data
