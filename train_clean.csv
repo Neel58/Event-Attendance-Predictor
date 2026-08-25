@@ -45,7 +45,7 @@ S1003,Competition,12,5,2,0.0,Monday,16.0,5.9,0
 S1404,Competition,4,7,4,1.0,Thursday,11.0,2.4,1
 S1302,Talk,14,4,3,1.0,Saturday,11.0,4.8,1
 S1416,Hackathon,3,5,2,0.0,Wednesday,18.0,4.3,1
-S1325,Social,10,2,3,1.0,Saturday,16.0,6.0,0
+S1325,Social,10,2,2,1.0,Saturday,16.0,6.0,0
 S1368,Social,13,1,0,1.0,Sunday,18.0,9.3,1
 S1251,Hackathon,11,1,1,1.0,Thursday,16.0,12.9,0
 S1118,Workshop,6,4,2,0.0,Saturday,14.0,2.3,1
@@ -55,7 +55,7 @@ S1212,Competition,3,5,2,1.0,Saturday,9.0,0.6,1
 S1105,Workshop,8,3,1,0.0,Sunday,14.0,6.6,1
 S1034,Social,10,4,2,1.0,Monday,18.0,0.8,0
 S1079,Hackathon,3,4,1,1.0,Saturday,18.0,1.2,1
-S1083,Hackathon,5,1,3,1.0,Thursday,14.0,8.7,1
+S1083,Hackathon,5,1,1,1.0,Thursday,14.0,8.7,1
 S1470,Social,11,4,2,1.0,Wednesday,18.0,4.1,1
 S1292,Workshop,12,5,3,0.0,Friday,16.0,1.2,1
 S1001,Hackathon,4,5,4,1.0,Saturday,16.0,7.7,0
@@ -341,7 +341,7 @@ S1378,Workshop,6,4,2,1.0,Monday,18.0,1.8,1
 S1385,Competition,2,4,1,1.0,Wednesday,18.0,5.1,0
 S1179,Social,5,2,1,1.0,Friday,14.0,5.9,1
 S1042,Talk,11,5,2,1.0,Wednesday,18.0,0.5,1
-S1443,Hackathon,0,2,3,1.0,Saturday,9.0,1.7,1
+S1443,Hackathon,0,2,2,1.0,Saturday,9.0,1.7,1
 S1394,Competition,10,10,8,1.0,Saturday,9.0,3.0,1
 S1207,Workshop,1,4,4,1.0,Wednesday,16.0,25.0,0
 S1283,Workshop,13,4,3,1.0,Friday,14.0,6.0,1
@@ -349,7 +349,7 @@ S1255,Workshop,1,0,0,0.0,Monday,14.0,5.5,1
 S1419,Talk,8,8,4,1.0,Tuesday,14.0,1.5,1
 S1005,Workshop,14,8,6,1.0,Monday,18.0,6.9,1
 S1257,Social,7,2,2,1.0,Saturday,14.0,1.9,0
-S1456,Workshop,3,4,5,1.0,Sunday,16.0,5.3,1
+S1456,Workshop,3,4,4,1.0,Sunday,16.0,5.3,1
 S1101,Workshop,13,4,3,1.0,Wednesday,11.0,4.2,0
 S1227,Social,7,4,1,1.0,Tuesday,16.0,12.0,0
 S1434,Workshop,12,1,1,0.0,Sunday,14.0,5.0,0
@@ -465,7 +465,7 @@ S1236,Competition,7,2,1,1.0,Sunday,16.0,17.0,0
 S1253,Competition,13,8,7,1.0,Sunday,14.0,8.6,1
 S1022,Workshop,9,5,3,0.0,Tuesday,16.0,7.5,0
 S1314,Social,14,9,8,1.0,Friday,18.0,4.8,1
-S1460,Hackathon,13,4,5,1.0,Saturday,11.0,12.7,0
+S1460,Hackathon,13,4,4,1.0,Saturday,11.0,12.7,0
 S1161,Hackathon,12,2,1,0.0,Sunday,14.0,5.7,1
 S1277,Competition,2,4,3,1.0,Sunday,9.0,3.7,1
 S1444,Hackathon,8,3,2,1.0,Friday,16.0,6.0,1
@@ -474,7 +474,7 @@ S1386,Competition,11,6,5,1.0,Saturday,9.0,9.0,0
 S1294,Hackathon,8,7,6,1.0,Monday,11.0,2.7,0
 S1414,Talk,14,5,1,1.0,Friday,9.0,3.4,1
 S1344,Hackathon,1,7,5,1.0,Wednesday,9.0,5.1,1
-S1258,Competition,9,4,5,1.0,Tuesday,14.0,1.6,1
+S1258,Competition,9,4,4,1.0,Tuesday,14.0,1.6,1
 S1309,Competition,2,4,3,0.0,Monday,16.0,9.0,0
 S1150,Workshop,0,3,2,0.0,Saturday,14.0,0.5,1
 S1131,Hackathon,6,4,4,1.0,Monday,14.0,13.0,0
@@ -493,5 +493,5 @@ S1072,Workshop,1,1,0,1.0,Monday,14.0,4.7,0
 S1107,Hackathon,10,2,2,1.0,Sunday,18.0,11.8,1
 S1271,Competition,9,8,6,0.0,Tuesday,9.0,3.8,1
 S1349,Hackathon,5,2,1,0.0,Thursday,11.0,4.1,1
-S1436,Competition,3,4,5,1.0,Monday,11.0,5.5,1
+S1436,Competition,3,4,4,1.0,Monday,11.0,5.5,1
 S1103,Hackathon,9,4,4,1.0,Monday,14.0,1.4,1
