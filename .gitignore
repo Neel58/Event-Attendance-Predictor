@@ -1,0 +1,9 @@
+# Python/Jupyter temporary files
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+rename_and_fix.py
+
+# Machine Learning specific
+catboost_info/

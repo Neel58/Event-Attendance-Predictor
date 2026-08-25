@@ -1,0 +1,6 @@
+student_id,event_type,registration_days_before,previous_events_registered,previous_events_attended,club_member,event_day,event_time,travel_distance_km,attended
+S1138,Competition,8,7,5,0.0,Monday,11.0,1.9,
+S1046,Talk,5,5,2,1.0,Tuesday,18.0,5.8,
+S1204,Social,6,2,1,1.0,Saturday,14.0,3.1,
+S1254,Hackathon,4,3,1,0.0,Monday,16.0,2.7,
+S1383,Talk,1,6,5,0.0,Saturday,18.0,6.7,
