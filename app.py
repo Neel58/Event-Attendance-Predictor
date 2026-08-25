@@ -54,25 +54,29 @@ CAT_FEATURES = ["event_type", "event_day"]
 FEATURES = NUM_FEATURES + CAT_FEATURES
 
 MODEL_FILES = {
+    "Gradient Boosting": "gradient_boosting.joblib",
     "LightGBM": "lightgbm.joblib",
+    "Hist Gradient Boosting": "hist_gradient_boosting.joblib",
     "CatBoost": "catboost.joblib",
     "SVM (RBF)": "svm_rbf.joblib",
     "SVM (Linear)": "svm_linear.joblib",
     "Logistic Regression": "logistic_regression.joblib",
     "XGBoost": "xgboost.joblib",
 }
-BEST_MODEL_NAME = "LightGBM"  # winner by F1 on the notebook's hold-out split
+BEST_MODEL_NAME = "Gradient Boosting"  # winner by AUC and tied F1 on hold-out split
 
 # Metrics copied from the modeling notebook's hold-out evaluation, so the
 # comparison table renders instantly without re-running every model.
 RESULTS_TABLE = pd.DataFrame(
     [
+        {"model": "Gradient Boosting", "precision": 0.7885, "recall": 0.6508, "f1": 0.7130, "auc": 0.7280},
         {"model": "LightGBM", "precision": 0.7925, "recall": 0.6667, "f1": 0.7241, "auc": 0.7113},
+        {"model": "Hist Gradient Boosting", "precision": 0.7414, "recall": 0.6825, "f1": 0.7107, "auc": 0.6800},
         {"model": "SVM (RBF)", "precision": 0.7593, "recall": 0.6508, "f1": 0.7009, "auc": 0.6804},
         {"model": "CatBoost", "precision": 0.7692, "recall": 0.6349, "f1": 0.6957, "auc": 0.7181},
         {"model": "SVM (Linear)", "precision": 0.7018, "recall": 0.6349, "f1": 0.6667, "auc": 0.6568},
         {"model": "Logistic Regression", "precision": 0.7255, "recall": 0.5873, "f1": 0.6491, "auc": 0.6843},
-        {"model": "XGBoost", "precision": 0.7500, "recall": 0.5714, "f1": 0.6486, "auc": 0.6890},
+        {"model": "XGBoost", "precision": 0.7600, "recall": 0.6032, "f1": 0.6726, "auc": 0.6782},
     ]
 ).set_index("model")
 
@@ -210,7 +214,7 @@ page = st.sidebar.radio(
 st.sidebar.markdown("---")
 st.sidebar.caption(
     "Predicts whether a student who registered for a club event will actually "
-    "attend, using 6 trained classifiers evaluated on a held-out split."
+    "attend, using 8 trained classifiers evaluated on a held-out split."
 )
 
 train_df = load_train()
@@ -383,9 +387,9 @@ elif page == "EDA Highlights":
 elif page == "Modeling & Results":
     st.title("Modeling & Results")
     st.markdown(
-        "6 classifiers were trained — Logistic Regression, SVM (RBF & Linear), "
-        "XGBoost, LightGBM, and CatBoost — all regularized and class-weight "
-        "balanced, then scored on the same stratified 20% hold-out split."
+        "8 classifiers were trained — Gradient Boosting, LightGBM, Hist Gradient Boosting, "
+        "CatBoost, SVM (RBF & Linear), XGBoost, and Logistic Regression — all regularized "
+        "and class-weight balanced, then scored on the same stratified 20% hold-out split."
     )
 
     st.markdown("### Model comparison")
@@ -404,9 +408,8 @@ elif page == "Modeling & Results":
     st.plotly_chart(fig, use_container_width=True)
 
     st.success(
-        f"**Best model: {BEST_MODEL_NAME}** — highest F1 (0.72), handling the "
-        "categorical features natively and staying regularized enough not to "
-        "overfit ~400 training rows.",
+        f"**Best model: {BEST_MODEL_NAME}** — highest AUC (0.73) and tied F1 (0.71), "
+        "staying regularized enough not to overfit ~400 training rows.",
         icon="🏆",
     )
 
@@ -457,7 +460,7 @@ elif page == "Modeling & Results":
     with st.expander("⚠️ Limitations & what I'd do with more time/data"):
         st.markdown(
             "- **Small dataset** — only 496 clean training rows (396 after the "
-            "hold-out split). All 6 models were deliberately kept shallow/"
+            "hold-out split). All 8 models were deliberately kept shallow/"
             "regularized because of this; a bigger dataset would likely let a "
             "more expressive model do better.\n"
             "- **Moderate ceiling** — best F1 is 0.72, AUC ~0.71. Good enough to "
