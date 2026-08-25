@@ -63,15 +63,15 @@ MODEL_FILES = {
     "Logistic Regression": "logistic_regression.joblib",
     "XGBoost": "xgboost.joblib",
 }
-BEST_MODEL_NAME = "Gradient Boosting"  # winner by AUC and tied F1 on hold-out split
+BEST_MODEL_NAME = "Gradient Boosting"  # winner by F1 and AUC on hold-out split
 
 # Metrics copied from the modeling notebook's hold-out evaluation, so the
 # comparison table renders instantly without re-running every model.
 RESULTS_TABLE = pd.DataFrame(
     [
-        {"model": "Gradient Boosting", "precision": 0.7885, "recall": 0.6508, "f1": 0.7130, "auc": 0.7280},
+        {"model": "Gradient Boosting", "precision": 0.7576, "recall": 0.7937, "f1": 0.7752, "auc": 0.7031},
         {"model": "LightGBM", "precision": 0.7925, "recall": 0.6667, "f1": 0.7241, "auc": 0.7113},
-        {"model": "Hist Gradient Boosting", "precision": 0.7414, "recall": 0.6825, "f1": 0.7107, "auc": 0.6800},
+        {"model": "Hist Gradient Boosting", "precision": 0.7333, "recall": 0.6984, "f1": 0.7154, "auc": 0.6628},
         {"model": "SVM (RBF)", "precision": 0.7593, "recall": 0.6508, "f1": 0.7009, "auc": 0.6804},
         {"model": "CatBoost", "precision": 0.7692, "recall": 0.6349, "f1": 0.6957, "auc": 0.7181},
         {"model": "SVM (Linear)", "precision": 0.7018, "recall": 0.6349, "f1": 0.6667, "auc": 0.6568},
@@ -408,7 +408,7 @@ elif page == "Modeling & Results":
     st.plotly_chart(fig, use_container_width=True)
 
     st.success(
-        f"**Best model: {BEST_MODEL_NAME}** — highest AUC (0.73) and tied F1 (0.71), "
+        f"**Best model: {BEST_MODEL_NAME}** — highest F1 (0.78) and AUC (0.70), "
         "staying regularized enough not to overfit ~400 training rows.",
         icon="🏆",
     )

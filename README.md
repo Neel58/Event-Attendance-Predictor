@@ -25,9 +25,9 @@ Statistical testing (not guessing) found:
 
 | Model | Precision | Recall | F1 | AUC |
 |---|---|---|---|---|
-| 🏆 **GradientBoosting** | 0.79 | 0.65 | **0.71** | **0.73** |
+| 🏆 **GradientBoosting** | 0.76 | 0.79 | **0.78** | 0.70 |
 | LightGBM | 0.79 | 0.65 | 0.71 | 0.71 |
-| HistGradientBoosting | 0.74 | 0.68 | 0.71 | 0.68 |
+| HistGradientBoosting | 0.73 | 0.70 | 0.72 | 0.66 |
 | CatBoost | 0.76 | 0.65 | 0.70 | 0.71 |
 | SVM (RBF) | 0.75 | 0.63 | 0.69 | 0.68 |
 | XGBoost | 0.76 | 0.60 | 0.67 | 0.68 |
@@ -35,7 +35,7 @@ Statistical testing (not guessing) found:
 | Logistic Regression | 0.73 | 0.59 | 0.65 | 0.68 |
 | AdaBoost | 0.71 | 0.59 | 0.64 | 0.65 |
 
-All 9 use class-balancing (63/37 imbalance) and deliberately heavy regularization — with only ~400 rows, an unconstrained model memorizes noise, not patterns. **GradientBoosting** ties LightGBM's F1 and wins on AUC, making it the new deployed model (`model/gradient_boosting.joblib`); **HistGradientBoosting** is a close third with the best recall of any model — worth a look if catching more true attendees matters more than precision.
+All 9 use class-balancing (63/37 imbalance) and deliberately heavy regularization — with only ~400 rows, an unconstrained model memorizes noise, not patterns. **GradientBoosting** wins on F1 (0.78) and is the deployed model (`model/gradient_boosting.joblib`); **HistGradientBoosting** is also a strong performer with the best balance of precision and recall.
 
 **Why did LightGBM (and SVM-RBF) beat Logistic Regression?** LR can only draw a *straight line* through the data. But attendance depends on *interactions* — e.g. early registration only matters if you're a club member. LightGBM's trees capture those interactions natively; SVM-RBF gets partial credit via its kernel, which is why it also beats the linear models, just less than LightGBM.
 
